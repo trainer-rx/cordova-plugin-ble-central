@@ -1,6 +1,6 @@
 # BLE plugin for Apache Cordova with Nordic DFU
 
-This plugin updates the [fxe-gear/cordova-plugin-ble-central]{https://github.com/fxe-gear/cordova-plugin-ble-central.git} plugin to include the latest changes from [don/cordova-plugin-ble-central](https://github.com/don/cordova-plugin-ble-central).
+This plugin updates the [fxe-gear/cordova-plugin-ble-central](https://github.com/fxe-gear/cordova-plugin-ble-central.git) plugin to include the latest changes from [don/cordova-plugin-ble-central](https://github.com/don/cordova-plugin-ble-central).
 
 This plugin enables communication between a phone and Bluetooth Low Energy (BLE) peripherals. It is
 a fork of excellent
