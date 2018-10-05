@@ -19,7 +19,14 @@
 #import "CBPeripheral+Extensions.h"
 
 static char ADVERTISING_IDENTIFER;
-static char ADVERTISEMENT_RSSI_IDENTIFER;
+static char SAVED_RSSI_IDENTIFER;
+
+static NSDictionary *dataToArrayBuffer(NSData* data) {
+    return @{
+             @"CDVType" : @"ArrayBuffer",
+             @"data" :[data base64EncodedStringWithOptions:0]
+             };
+}
 
 @implementation CBPeripheral(com_megster_ble_extension)
 
@@ -47,10 +54,8 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
         [dictionary setObject: [self name] forKey: @"name"];
     }
 
-    if ([self RSSI]) {
-        [dictionary setObject: [self RSSI] forKey: @"rssi"];
-    } else if ([self advertisementRSSI]) {
-        [dictionary setObject: [self advertisementRSSI] forKey: @"rssi"];
+    if ([self savedRSSI]) {
+        [dictionary setObject: [self savedRSSI] forKey: @"rssi"];
     }
 
     if ([self advertising]) {
@@ -62,15 +67,12 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
     }
 
     return dictionary;
-
 }
 
 // AdvertisementData is from didDiscoverPeripheral. RFduino advertises a service name in the Mfg Data Field.
--(void)setAdvertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)rssi{
-
+-(void)setAdvertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)rssi {
     [self setAdvertising:[self serializableAdvertisementData: advertisementData]];
-    [self setAdvertisementRSSI: rssi];
-
+    [self setSavedRSSI: rssi];
 }
 
 // Translates the Advertisement Data from didDiscoverPeripheral into a structure that can be serialized as JSON
@@ -99,7 +101,6 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
 //     kCBAdvDataTxPowerLevel = 32;
 //};
 - (NSDictionary *) serializableAdvertisementData: (NSDictionary *) advertisementData {
-
     NSMutableDictionary *dict = [advertisementData mutableCopy];
 
     // Service Data is a dictionary of CBUUID and NSData
@@ -158,7 +159,6 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
 // Put the service, characteristic, and descriptor data in a format that will serialize through JSON
 // sending a list of services and a list of characteristics
 - (void) serviceAndCharacteristicInfo: (NSMutableDictionary *) info {
-
     NSMutableArray *serviceList = [NSMutableArray new];
     NSMutableArray *characteristicList = [NSMutableArray new];
 
@@ -200,7 +200,6 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
 
     [info setObject:serviceList forKey:@"services"];
     [info setObject:characteristicList forKey:@"characteristics"];
-
 }
 
 -(NSArray *) decodeCharacteristicProperties: (CBCharacteristic *) characteristic {
@@ -252,16 +251,6 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
     return props;
 }
 
-// Borrowed from Cordova messageFromArrayBuffer since Cordova doesn't handle NSData in NSDictionary
-id dataToArrayBuffer(NSData* data)
-{
-    return @{
-             @"CDVType" : @"ArrayBuffer",
-             @"data" :[data base64EncodedStringWithOptions:0]
-             };
-}
-
-
 -(void)setAdvertising:(NSDictionary *)newAdvertisingValue{
     objc_setAssociatedObject(self, &ADVERTISING_IDENTIFER, newAdvertisingValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -271,12 +260,12 @@ id dataToArrayBuffer(NSData* data)
 }
 
 
--(void)setAdvertisementRSSI:(NSNumber *)newAdvertisementRSSIValue {
-    objc_setAssociatedObject(self, &ADVERTISEMENT_RSSI_IDENTIFER, newAdvertisementRSSIValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+-(void)setSavedRSSI:(NSNumber *)newSavedRSSIValue {
+    objc_setAssociatedObject(self, &SAVED_RSSI_IDENTIFER, newSavedRSSIValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(NSString*)advertisementRSSI{
-    return objc_getAssociatedObject(self, &ADVERTISEMENT_RSSI_IDENTIFER);
+-(NSString*)savedRSSI{
+    return objc_getAssociatedObject(self, &SAVED_RSSI_IDENTIFER);
 }
 
 @end
