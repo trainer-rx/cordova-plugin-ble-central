@@ -36,9 +36,17 @@
 
         <!-- frameworks -->
         <framework src="CoreBluetooth.framework" />
-        <framework src="iOSDFULibrary" type="podspec" spec="~> 4.1.2"/>
+        <framework src="iOSDFULibrary" type="podspec" spec="~> 4.2.2"/>
 
-        <hook type="before_plugin_install" src="hooks/ios_pod_extra_settings.js" />
+        <xsl:choose>
+            <xsl:when test="lower-case($DEPENDENCY_MANAGER) = 'carthage'">
+                <hook type="before_plugin_install" src="hooks/ios_cart_extra_settings.js" />
+            </xsl:when>
+            <xsl:otherwise>
+                <hook type="before_plugin_install" src="hooks/ios_pod_extra_settings.js" />
+            </xsl:otherwise>
+        </xsl:choose>
+        
 
         <preference name="BLUETOOTH_USAGE_DESCRIPTION" default=" " />
         <config-file target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription">
@@ -64,7 +72,7 @@
             <service android:name="com.megster.cordova.ble.central.DfuService" />
         </config-file>
 
-        <framework src="no.nordicsemi.android:dfu:1.1.1"/>
+        <framework src="no.nordicsemi.android:dfu:1.8.0"/>
 
         <source-file src="src/android/BLECentralPlugin.java"
             target-dir="src/com/megster/cordova/ble/central"/>
