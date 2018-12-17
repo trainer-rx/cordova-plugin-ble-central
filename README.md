@@ -111,7 +111,7 @@ Location Services must be enabled for Bluetooth scanning. If location services a
 
 ### Parameters
 
-- __services__: List of services to discover, or [] to find all devices
+- __services__: List of services to discover, or [] to find all devices. Some Android phones have trouble with services filters.
 - __seconds__: Number of seconds to run discovery
 - __success__: Success callback function that is invoked which each discovered device.
 - __failure__: Error callback function, invoked when error occurs. [optional]
