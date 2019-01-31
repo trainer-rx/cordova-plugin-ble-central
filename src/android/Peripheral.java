@@ -119,12 +119,15 @@ public class Peripheral extends BluetoothGattCallback {
         autoconnect = auto;
         connectCallback = callbackContext;
 
+        unpairDevice();
         gattConnect();
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
-        gatt.requestConnectionPriority(1);
+        if (gatt != null) {
+            gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+        }
     }
 
     // the app requested the central disconnect from the peripheral
@@ -140,6 +143,15 @@ public class Peripheral extends BluetoothGattCallback {
         }
         queueCleanup();
         callbackCleanup();
+    }
+
+    private void unpairDevice() {
+        try {
+            Method m = device.getClass().getMethod("removeBond", (Class[]) null);
+            m.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+            LOG.e(TAG, "unpairDevice.error: " + e.getMessage());
+        }
     }
 
     // the peripheral disconnected

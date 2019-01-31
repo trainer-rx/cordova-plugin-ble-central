@@ -25,11 +25,12 @@
 #import "BLECommandContext.h"
 #import "CBPeripheral+Extensions.h"
 
-@interface BLECentralPlugin : CDVPlugin <CBCentralManagerDelegate, CBPeripheralDelegate, LoggerDelegate, DFUServiceDelegate, DFUProgressDelegate> {
-    NSString* discoverPeripherialCallbackId;
-    NSString* stateCallbackId;
+@interface BLECentralPlugin : CDVPlugin <CBCentralManagerDelegate, CBPeripheralDelegate, LoggerDelegate, DFUServiceDelegate, DFUProgressDelegate>
+{
+    NSString *discoverPeripheralCallbackId;
+    NSString *stateCallbackId;
     NSString *dfuCallbackId;
-    NSMutableDictionary* connectCallbacks;
+    NSMutableDictionary *connectCallbacks;
     NSMutableDictionary *readCallbacks;
     NSMutableDictionary *writeCallbacks;
     NSMutableDictionary *notificationCallbacks;
@@ -40,15 +41,15 @@
     DFUServiceController *dfuController;
 }
 
-@property (strong, nonatomic) NSMutableSet *peripherals;
-@property (strong, nonatomic) CBCentralManager *manager;
+@property(strong, nonatomic) NSMutableSet *peripherals;
+@property(strong, nonatomic) CBCentralManager *manager;
 
 - (void)scan:(CDVInvokedUrlCommand *)command;
 - (void)startScan:(CDVInvokedUrlCommand *)command;
 - (void)startScanWithOptions:(CDVInvokedUrlCommand *)command;
 - (void)stopScan:(CDVInvokedUrlCommand *)command;
-- (void)connectedPeripheralsWithServices:(CDVInvokedUrlCommand*)command;
-- (void)peripheralsWithIdentifiers:(CDVInvokedUrlCommand*)command;
+- (void)connectedPeripheralsWithServices:(CDVInvokedUrlCommand *)command;
+- (void)peripheralsWithIdentifiers:(CDVInvokedUrlCommand *)command;
 
 - (void)connect:(CDVInvokedUrlCommand *)command;
 - (void)autoConnect:(CDVInvokedUrlCommand *)command;
