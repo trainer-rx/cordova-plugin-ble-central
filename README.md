@@ -2,6 +2,11 @@
 
 This plugin updates the [fxe-gear/cordova-plugin-ble-central](https://github.com/fxe-gear/cordova-plugin-ble-central.git) plugin to include the latest changes from [don/cordova-plugin-ble-central](https://github.com/don/cordova-plugin-ble-central).
 
+There are two additional changes:
+
+1. When connecting, first unpair the device, which allows certain LG and Motorola phones to connect repeatedly. Some models need to reestablish the bonding information each time they connect.
+2. When connecting, set the connection priority to high to increase the data transfer speed.
+
 This plugin enables communication between a phone and Bluetooth Low Energy (BLE) peripherals. It is
 a fork of excellent
 [don/cordova-plugin-ble-central](https://github.com/don/cordova-plugin-ble-central) plugin enriched
@@ -75,7 +80,7 @@ A complete list of possible status strings is:
 - `deviceDisconnected` - the last callback on successful upgrade
 - `dfuAborted` - the last callback on user abort
 
-The list is only approximately ordered. *Not all statuses all presented on both platforms.*
+The list is only approximately ordered. _Not all statuses all presented on both platforms._
 If `status` is `progressChanged`, the object is extended by a `progress` key like so:
 
 ```javascript
@@ -105,19 +110,20 @@ trigger. This is intentional.
 
 ### Parameters
 
-- __device_id__: UUID or MAC address of the peripheral
-- __uri__: URI of a firmware ZIP file on the **local filesystem**
+- **device_id**: UUID or MAC address of the peripheral
+- **uri**: URI of a firmware ZIP file on the **local filesystem**
   (see [cordova-plugin-file](https://github.com/apache/cordova-plugin-file))
-- __progress__: Progress callback function that is invoked multiple times with upgrade status info
-- __failure__: Error callback function, invoked when an error occurs
+- **progress**: Progress callback function that is invoked multiple times with upgrade status info
+- **failure**: Error callback function, invoked when an error occurs
 
 ### Quick Example
 
 ```javascript
 // presume connected device
 
-var device_id = "BD922605-1B07-4D55-8D09-B66653E51BBA"
-var uri = "file:///var/mobile/Applications/12312-1231-1231-123312-123123/Documents/firmware.zip";
+var device_id = "BD922605-1B07-4D55-8D09-B66653E51BBA";
+var uri =
+  "file:///var/mobile/Applications/12312-1231-1231-123312-123123/Documents/firmware.zip";
 
 ble.upgradeFirmware(device_id, uri, console.log, console.error);
 ```
