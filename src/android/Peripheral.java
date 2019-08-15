@@ -836,7 +836,7 @@ public class Peripheral extends BluetoothGattCallback {
 
         // Android 8.1 and greater require the notiication channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            starter.createDfuNotificationChannel(this);
+            starter.createDfuNotificationChannel(currentActivity.getApplicationContext());
         }
 
         // set the ZIP and start the process
