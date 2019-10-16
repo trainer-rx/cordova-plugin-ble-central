@@ -119,7 +119,6 @@ public class Peripheral extends BluetoothGattCallback {
         autoconnect = auto;
         connectCallback = callbackContext;
 
-        unpairDevice();
         gattConnect();
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);

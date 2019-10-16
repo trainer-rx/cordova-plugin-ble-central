@@ -36,16 +36,7 @@
 
         <!-- frameworks -->
         <framework src="CoreBluetooth.framework" />
-        <framework src="iOSDFULibrary" type="podspec" spec="~> 4.2.2"/>
-
-        <xsl:choose>
-            <xsl:when test="lower-case($DEPENDENCY_MANAGER) = 'carthage'">
-                <hook type="before_plugin_install" src="hooks/ios_cart_extra_settings.js" />
-            </xsl:when>
-            <xsl:otherwise>
-                <hook type="before_plugin_install" src="hooks/ios_pod_extra_settings.js" />
-            </xsl:otherwise>
-        </xsl:choose>
+        <framework src="iOSDFULibrary" type="podspec" spec='~> 4.5.0'/>
 
 
         <preference name="BLUETOOTH_USAGE_DESCRIPTION" default=" " />
