@@ -708,6 +708,12 @@
 
 #pragma mark CBPeripheralDelegate
 
+- (void)peripheral:(CBPeripheral *)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices {
+    
+    [peripheral discoverServices:(NSArray<CBUUID *> *)nil];
+    
+}
+
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
     NSLog(@"didDiscoverServices");
 
