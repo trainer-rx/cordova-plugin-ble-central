@@ -144,6 +144,11 @@ public class Peripheral extends BluetoothGattCallback {
         callbackCleanup();
     }
 
+    public void unbond() {
+        unpairDevice();
+        disconnect();
+    }
+
     private void unpairDevice() {
         try {
             Method m = device.getClass().getMethod("removeBond", (Class[]) null);

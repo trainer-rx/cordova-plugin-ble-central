@@ -58,6 +58,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String CONNECT = "connect";
     private static final String AUTOCONNECT = "autoConnect";
     private static final String DISCONNECT = "disconnect";
+    private static final String UNBOND = "unbond";
 
     private static final String REQUEST_MTU = "requestMtu";
     private static final String REFRESH_DEVICE_CACHE = "refreshDeviceCache";
@@ -180,6 +181,9 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             String macAddress = args.getString(0);
             disconnect(callbackContext, macAddress);
 
+        } else if (action.equals(UNBOND)) {
+            String macAddress = args.getString(0);
+            unbond(callbackContext, macAddress);
         } else if (action.equals(REQUEST_MTU)) {
 
             String macAddress = args.getString(0);
@@ -441,6 +445,18 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             callbackContext.error(message);
         }
 
+    }
+
+    private void unbond(CallbackContext callbackContext, String macAddress) {
+        Peripheral peripheral = peripherals.get(macAddress);
+        if (peripheral != null) {
+            peripheral.unbond();
+            callbackContext.success();
+        } else {
+            String message = "Peripheral " + macAddress + " not found.";
+            LOG.w(TAG, message);
+            callbackContext.error(message);
+        }
     }
 
     private void requestMtu(CallbackContext callbackContext, String macAddress, int mtuValue) {
