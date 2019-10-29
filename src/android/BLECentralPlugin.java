@@ -60,6 +60,8 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String DISCONNECT = "disconnect";
     private static final String UNBOND = "unbond";
 
+    private static final String QUEUE_CLEANUP = "queueCleanup";
+
     private static final String REQUEST_MTU = "requestMtu";
     private static final String REFRESH_DEVICE_CACHE = "refreshDeviceCache";
 
@@ -73,6 +75,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String STOP_NOTIFICATION = "stopNotification"; // remove characteristic notification
 
     private static final String IS_ENABLED = "isEnabled";
+    private static final String IS_LOCATION_ENABLED = "isLocationEnabled";
     private static final String IS_CONNECTED = "isConnected";
 
     private static final String SETTINGS = "showBluetoothSettings";
@@ -127,7 +130,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
 
     @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
-        LOG.d(TAG, "action = " + action);
+        LOG.d(TAG, "action = %s", action);
 
         if (bluetoothAdapter == null) {
             Activity activity = cordova.getActivity();
@@ -180,10 +183,14 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
 
             String macAddress = args.getString(0);
             disconnect(callbackContext, macAddress);
-
         } else if (action.equals(UNBOND)) {
             String macAddress = args.getString(0);
             unbond(callbackContext, macAddress);
+        } else if (action.equals(QUEUE_CLEANUP)) {
+
+            String macAddress = args.getString(0);
+            queueCleanup(callbackContext, macAddress);
+
         } else if (action.equals(REQUEST_MTU)) {
 
             String macAddress = args.getString(0);
@@ -247,6 +254,14 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
                 callbackContext.success();
             } else {
                 callbackContext.error("Bluetooth is disabled.");
+            }
+
+        } else if (action.equals(IS_LOCATION_ENABLED)) {
+
+            if (locationServicesEnabled()) {
+                callbackContext.success();
+            } else {
+                callbackContext.error("Location services disabled.");
             }
 
         } else if (action.equals(IS_CONNECTED)) {
@@ -459,6 +474,14 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
         }
     }
 
+    private void queueCleanup(CallbackContext callbackContext, String macAddress) {
+        Peripheral peripheral = peripherals.get(macAddress);
+        if (peripheral != null) {
+            peripheral.queueCleanup();
+        }
+        callbackContext.success();
+    }
+
     private void requestMtu(CallbackContext callbackContext, String macAddress, int mtuValue) {
 
         Peripheral peripheral = peripherals.get(macAddress);
@@ -585,8 +608,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private void findLowEnergyDevices(CallbackContext callbackContext, UUID[] serviceUUIDs, int scanSeconds) {
 
         if (!locationServicesEnabled()) {
-            callbackContext.error("Location Services are disabled");
-            return;
+            LOG.w(TAG, "Location Services are disabled");
         }
 
         if (!PermissionHelper.hasPermission(this, ACCESS_COARSE_LOCATION)) {
@@ -689,11 +711,13 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
 
         } else {
             Peripheral peripheral = peripherals.get(address);
-            peripheral.update(rssi, scanRecord);
-            if (reportDuplicates && discoverCallback != null) {
-                PluginResult result = new PluginResult(PluginResult.Status.OK, peripheral.asJSONObject());
-                result.setKeepCallback(true);
-                discoverCallback.sendPluginResult(result);
+            if (peripheral != null) {
+                peripheral.update(rssi, scanRecord);
+                if (reportDuplicates && discoverCallback != null) {
+                    PluginResult result = new PluginResult(PluginResult.Status.OK, peripheral.asJSONObject());
+                    result.setKeepCallback(true);
+                    discoverCallback.sendPluginResult(result);
+                }
             }
         }
     }

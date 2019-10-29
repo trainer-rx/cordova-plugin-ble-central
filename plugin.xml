@@ -3,7 +3,7 @@
     xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="cordova-plugin-ble-central"
-    version="1.2.2">
+    version="1.2.4">
 
     <name>BLE</name>
     <description>Bluetooth Low Energy (BLE) Central Plugin</description>
@@ -43,11 +43,9 @@
         <config-file target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
             <string>$BLUETOOTH_USAGE_DESCRIPTION</string>
         </config-file>
-        <preference name="LOCATION_USAGE_DESCRIPTION" default=" " />
-        <config-file target="*-Info.plist" parent="NSLocationAlwaysAndWhenInUseUsageDescription">
-            <string>$LOCATION_USAGE_DESCRIPTION</string>
-        </config-file>  
-        
+        <config-file target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
+            <string>$BLUETOOTH_USAGE_DESCRIPTION</string>
+        </config-file>
     </platform>
 
     <platform name="android">
@@ -72,6 +70,8 @@
         <framework src="no.nordicsemi.android:dfu:1.8.0"/>
 
         <source-file src="src/android/BLECentralPlugin.java"
+            target-dir="src/com/megster/cordova/ble/central"/>
+        <source-file src="src/android/SequentialCallbackContext.java"
             target-dir="src/com/megster/cordova/ble/central"/>
         <source-file src="src/android/BLECommand.java"
             target-dir="src/com/megster/cordova/ble/central"/>
