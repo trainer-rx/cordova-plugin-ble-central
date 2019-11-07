@@ -709,7 +709,7 @@
 #pragma mark CBPeripheralDelegate
 
 - (void)peripheral:(CBPeripheral *)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices {
-    
+    NSLog(@"didModifyServices");
     [peripheral discoverServices:nil];
     
 }
