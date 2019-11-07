@@ -710,7 +710,7 @@
 
 - (void)peripheral:(CBPeripheral *)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices {
     
-    [peripheral discoverServices:(NSArray<CBUUID *> *)nil];
+    [peripheral discoverServices:nil];
     
 }
 
