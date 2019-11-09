@@ -36,6 +36,7 @@
 
         <!-- frameworks -->
         <framework src="CoreBluetooth.framework" />
+        <framework src="iOSDFULibrary" type="podspec" spec='~> 4.5.0'/>
 
 
         <preference name="BLUETOOTH_USAGE_DESCRIPTION" default=" " />
