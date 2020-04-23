@@ -402,6 +402,7 @@ public class Peripheral extends BluetoothGattCallback {
             LOG.d(TAG, "onConnectionStateChange CONNECTED");
             connected = true;
             connecting = false;
+            Thread.sleep(2000);
             gatt.discoverServices();
 
         } else { // Disconnected
