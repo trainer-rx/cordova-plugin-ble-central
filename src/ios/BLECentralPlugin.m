@@ -88,12 +88,12 @@
 - (void)autoConnect:(CDVInvokedUrlCommand *)command {
     NSLog(@"autoConnect");
     NSString *uuid = [command argumentAtIndex:0];
-    
+
     CBPeripheral *peripheral = [self findPeripheralByUUID:uuid];
-    
+
     if (peripheral) {
         NSLog(@"Autoconnecting to peripheral with UUID : %@", uuid);
-        
+
         [connectCallbacks setObject:[command.callbackId copy] forKey:[peripheral uuidAsString]];
         [manager connectPeripheral:peripheral options:nil];
     } else {
@@ -103,7 +103,7 @@
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
-    
+
 }
 
 // disconnect: function (device_id, success, failure) {
@@ -583,16 +583,16 @@
     NSLog(@"peripheralsWithIdentifiers");
     NSArray *identifierUUIDStrings = [command argumentAtIndex:0];
     NSArray<NSUUID *> *identifiers = [self uuidStringsToNSUUIDs:identifierUUIDStrings];
-    
+
     NSArray<CBPeripheral *> *foundPeripherals = [manager retrievePeripheralsWithIdentifiers:identifiers];
     // TODO are any of these connected?
     NSMutableArray<NSDictionary *> *found = [NSMutableArray new];
-    
+
     for (CBPeripheral *peripheral in foundPeripherals) {
         [peripherals addObject:peripheral];   // TODO do we save these?
         [found addObject:[peripheral asDictionary]];
     }
-    
+
     CDVPluginResult *pluginResult = nil;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:found];
     NSLog(@"Peripherals with identifiers %@ %@", identifierUUIDStrings, found);
@@ -711,7 +711,7 @@
 - (void)peripheral:(CBPeripheral *)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices {
     NSLog(@"didModifyServices");
     [peripheral discoverServices:nil];
-    
+
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
@@ -778,14 +778,14 @@
     if(readCallbackId) {
         NSData *data = characteristic.value; // send RAW data to Javascript
         CDVPluginResult *pluginResult = nil;
-        
+
         if (error) {
             NSLog(@"%@", error);
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArrayBuffer:data];
         }
-        
+
         [self.commandDelegate sendPluginResult:pluginResult callbackId:readCallbackId];
 
         [readCallbacks removeObjectForKey:key];
@@ -809,9 +809,8 @@
         [self.commandDelegate sendPluginResult:pluginResult callbackId:stopNotificationCallbackId];
         [stopNotificationCallbacks removeObjectForKey:key];
         [notificationCallbacks removeObjectForKey:key];
-        NSAssert(![startNotificationCallbacks objectForKey:key], @"%@ existed in both start and stop notification callback dicts!", key);
     }
-    
+
     if (characteristic.isNotifying && startNotificationCallbackId) {
         if (error) {
             NSLog(@"%@", error);
