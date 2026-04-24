@@ -1,3 +1,5 @@
+The last reference of this plugin was removed in the trainer-rx repo in 2020, in https://github.com/trainer-rx/trainer-rx/pull/1858/changes/243c8c2a99b9269551cfbc8a333fce394309a4b4.
+
 # BLE plugin for Apache Cordova with Nordic DFU
 
 This plugin updates the [fxe-gear/cordova-plugin-ble-central](https://github.com/fxe-gear/cordova-plugin-ble-central.git) plugin to include the latest changes from [don/cordova-plugin-ble-central](https://github.com/don/cordova-plugin-ble-central).
